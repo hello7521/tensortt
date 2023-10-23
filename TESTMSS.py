@@ -10,7 +10,7 @@ import win32api
 import win32con
 from termcolor import colored
 import numpy as np
-
+import torch
 # define the MouseInput, Input_I, Input, and POINT ctypes classes
 class MouseInput(ctypes.Structure):
     _fields_ = [("dx", ctypes.c_long),
