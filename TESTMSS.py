@@ -62,7 +62,7 @@ fov_left = rio_center - fov_width // 2
 fov_right = rio_center + fov_width // 2
 fov_top = rio_center - fov_height // 2
 fov_bottom = rio_center + fov_height // 2
-model = torch.hub.load('yolov5', 'custom', path='aim.engine', source= "local").cuda()
+model = torch.hub.load('yolov5', 'custom', path='aim.engine', source= local).cuda()
 
 model.conf = 0.54
 model.classes = [0]
