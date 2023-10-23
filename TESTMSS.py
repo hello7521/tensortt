@@ -4,8 +4,7 @@
 import dxcam
 import time
 import ctypes
-import mss
-import torch
+from mss import mss
 import cv2
 import win32api
 import win32con
@@ -47,25 +46,25 @@ fullscreen = win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1)
 #width = int(input(colored(''' Enter your game screen width: ''', "light_blue")))
 #height = int(input(colored(''' Enter your game screen width: ''', "light_blue")))
 #fullscreen = (width, height)
-right, bottom = 200, 200
+right, bottom = 250, 250
 left = (fullscreen[0] - right) // 2
 top = (fullscreen[1] - bottom) // 2
 right = left + right
 bottom = top + bottom
 rejoin = (left, top, right, bottom)
 
-rio_center = 100
-mouse_speed = 2
-fov = 150
+rio_center = 125
+mouse_speed = 2.2
+fov = 140
 fov_width = fov
 fov_height = fov
 fov_left = rio_center - fov_width // 2
 fov_right = rio_center + fov_width // 2
 fov_top = rio_center - fov_height // 2
 fov_bottom = rio_center + fov_height // 2
-model = torch.hub.load(r'D:\TEN\yolov5', 'custom', path=r'D:\TEN\half.engine',_verbose=False, source= "local").cuda()
+model = torch.hub.load('yolov5', 'custom', path='aim.engine', source= "local").cuda()
 
-model.conf = 0.5
+model.conf = 0.54
 model.classes = [0]
 model.max = 10
 model.apm = True
@@ -91,7 +90,8 @@ with mss.mss() as sct:
             ymin = int(df.iloc[i, 1])
             xmax = int(df.iloc[i, 2])
             ymax = int(df.iloc[i, 3])
-            object_center = ((xmin + xmax) // 2, (ymin + ymax) // 2)  # THE ENEMY CENTER BOX
+            height = ymax - ymin
+            object_center = ((xmin + xmax) // 2, (ymin + ymax) // 2 - height / 3.8)  # THE ENEMY CENTER BOX
             cv2.rectangle(screenshot, (xmin, ymin), (xmax, ymax), (255, 0, 0), 3)
             distance = ((object_center[0] - rio_center) ** 2 + (object_center[1] - rio_center) ** 2) ** 0.6
 
@@ -110,8 +110,8 @@ with mss.mss() as sct:
                 input_data = Input(win32con.INPUT_MOUSE, Input_I(mi=mouse_input))
                 ctypes.windll.user32.SendInput(1, ctypes.byref(input_data), ctypes.sizeof(input_data))
 
-        cv2.imshow('Screen', screenshot)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        #cv2.imshow('Screen', screenshot)
+        #if cv2.waitKey(1) & 0xFF == ord('q'):
+            #break
     cv2.release()
     cv2.destroyAllWindows()
